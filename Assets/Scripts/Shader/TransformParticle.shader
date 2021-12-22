@@ -1,6 +1,6 @@
 ﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
 
-Shader "PortalWithNreal/TransformParticle"
+Shader "Custom/TransformParticle"
 {
     Properties
     {
