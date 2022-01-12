@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TestMaterial
+  m_Name: GPUParticleMaterial
   m_Shader: {fileID: 4800000, guid: 73930fe2c07b9cb44b00705bd2bd4ef5, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -64,8 +64,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _Intensity: 0.777
-    - _Loop: 106
+    - _Intensity: 0.1
+    - _Loop: 32
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1

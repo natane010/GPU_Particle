@@ -1,148 +1,164 @@
-﻿// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
-
-Shader "Custom/TransformParticle"
+﻿Shader "Custom/TransformParticle"
 {
     Properties
     {
         _MainTex("Texture", 2D) = "white" {}
+        _Intensity("Intensity", Range(0, 1)) = 0.1
+        [IntRange]_Loop("_Loop", Range(0, 128)) = 32
     }
-        SubShader
+
+    
+    
+    SubShader
     {
-        Tags { "RenderType" = "Opaque" }
+        Tags {
+            "Queue" = "Transparent"
+                "RenderType" = "Transparent" }
         LOD 100
+        
 
         Pass
         {
             CGPROGRAM
             #pragma vertex vert
-            #pragma fragment frag
+        #pragma fragment frag
 
-            #include "UnityCG.cginc"
+        # include "UnityCG.cginc"
+        # include "NoiseMath.cginc"
 
-            struct TransformParticle
+        struct TransformParticle
+        {
+            int isActive;
+            int targetId;
+            float2 uv;
+            float3 targetPosition;
+            float speed;
+            float3 position;
+            int useTexture;
+            float scale;
+            float4 velocity;
+            float3 horizontal;
+        };
+        struct appdata
+        {
+            float4 vertex : POSITION;
+            float3 normal : NORMAL;
+            float2 uv : TEXCOORD0;
+        };
+        struct v2f
+        {
+            float3 uv : TEXCOORD0;
+            float4 vertex : SV_POSITION;
+            float3 normal : NORMAL;
+            float3 wpos : TEXCOORD1;
+            int useTex : TEXCOORD2;
+        };
+        #define MAX_LOOP 100
+        float _Intensity;
+        int _Loop;
+        StructuredBuffer<TransformParticle> _Particles;
+        sampler2D _MainTex;
+        float4 _MainTex_ST;
+        fixed _BaseScale;
+        #define PI 3.1415926535
+        UNITY_DECLARE_TEX2DARRAY(_Textures);
+        float densityFunction(float3 p)
+        {
+            return 0.5 - length(p);
+        }
+        fixed3 rotate(fixed3 p, fixed3 rotation)
+        {
+            fixed3 a = normalize(rotation);
+            fixed angle = length(rotation);
+
+            if (abs(angle) < 0.001)
             {
-                int isActive;
-                int targetId;
-                float2 uv;
-
-                float3 targetPosition;
-
-                float speed;
-                float3 position;
-
-                int useTexture;
-                float scale;
-
-                float4 velocity;
-
-                float3 horizontal;
-            };
-
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float3 normal : NORMAL;
-                float2 uv : TEXCOORD0;
-            };
-
-            struct v2f
-            {
-                float3 uv : TEXCOORD0;
-                float4 vertex : SV_POSITION;
-                float3 normal : NORMAL;
-                int useTex : TEXCOORD2;
-            };
-
-            StructuredBuffer<TransformParticle> _Particles;
-
-            sampler2D _MainTex;
-            float4 _MainTex_ST;
-            fixed _BaseScale;
-
-            #define PI 3.1415926535
-
-            UNITY_DECLARE_TEX2DARRAY(_Textures);
-
-            float rand(float x)
-            {
-                return frac(sin(x) * 43758.5453);
+                return p;
             }
 
-            float rand(float2 co)
-            {
-                return frac(sin(dot(co.xy, float2(12.9898, 78.233))) * 43758.5453);
-            }
+            fixed s = sin(angle);
+            fixed c = cos(angle);
+            fixed r = 1.0 - c;
+            fixed3x3 m = fixed3x3(
+                a.x * a.x * r + c,
+                a.y * a.x * r + a.z * s,
+                a.z * a.x * r - a.y * s,
+                a.x * a.y * r - a.z * s,
+                a.y * a.y * r + c,
+                a.z * a.y * r + a.x * s,
+                a.x * a.z * r + a.y * s,
+                a.y * a.z * r - a.x * s,
+                a.z * a.z * r + c
+                );
+            return mul(m, p);
+        }
+        v2f vert(appdata v, uint id : SV_InstanceID)
+        {
+            TransformParticle p = _Particles[id];
+            v2f o;
+            float s = _BaseScale * p.scale * p.isActive;
+            fixed r = 2.0 * (rand(p.targetPosition.xy) - 0.5);
+            fixed3 r3 = fixed3(r, r, r) * (PI * 0.5 + _Time.y) * (p.speed * 0.1) * (1 - p.useTexture);
+            v.vertex.xyz = rotate(v.vertex.xyz, r3);
+            v.normal = rotate(v.normal, r3);
+            v.vertex.xyz = (v.vertex.xyz * s) + p.position;
+            o.vertex = mul(UNITY_MATRIX_VP, float4(v.vertex.xyz, 1.0));
+            o.normal = UnityObjectToWorldNormal(v.normal);
+            o.uv.xy = p.uv.xy;
+            o.uv.z = p.targetId;
+            o.useTex = p.useTexture;
+            o.wpos = mul(unity_ObjectToWorld, v.vertex);
+            return o;
+        }
+        fixed4 frag(v2f i) : SV_Target
+        {
+            fixed4 col;
+            float3 wpos = i.wpos;
+            float3 wdir = normalize(wpos - _WorldSpaceCameraPos);
+            float3 localPos = mul(unity_WorldToObject, float4(wpos, 1.0));
+            float3 localDir = UnityWorldToObjectDir(wdir);
+            float step = 1.0 / _Loop;
+            float3 localStep = localDir * step;
 
-            fixed3 rotate(fixed3 p, fixed3 rotation)
+            float alpha = 0.0;
+            for (int a = 0; a < _Loop; ++a)
             {
-                fixed3 a = normalize(rotation);
-                fixed angle = length(rotation);
+                // ポリゴン中心ほど大きな値が返ってくる
+                float density = densityFunction(localPos);
 
-                if (abs(angle) < 0.001)
+                // 球の外側ではマイナスの値が返ってくるのでそれを弾く
+                if (density > 0.001)
                 {
-                    return p;
+                    // 透過率の足し合わせ
+                    alpha += (1.0 - alpha) * density * _Intensity;
                 }
 
-                fixed s = sin(angle);
-                fixed c = cos(angle);
-                fixed r = 1.0 - c;
-                fixed3x3 m = fixed3x3(
-                    a.x * a.x * r + c,
-                    a.y * a.x * r + a.z * s,
-                    a.z * a.x * r - a.y * s,
-                    a.x * a.y * r - a.z * s,
-                    a.y * a.y * r + c,
-                    a.z * a.y * r + a.x * s,
-                    a.x * a.z * r + a.y * s,
-                    a.y * a.z * r - a.x * s,
-                    a.z * a.z * r + c
-                    );
-                return mul(m, p);
-            }
+                // ステップを進める
+                localPos += localStep;
 
-            v2f vert(appdata v, uint id : SV_InstanceID)
-            {
-                TransformParticle p = _Particles[id];
-
-                v2f o;
-
-                float s = _BaseScale * p.scale * p.isActive;
-
-                fixed r = 2.0 * (rand(p.targetPosition.xy) - 0.5);
-                fixed3 r3 = fixed3(r, r, r) * (PI * 0.5 + _Time.y) * (p.speed * 0.1) * (1 - p.useTexture);
-                v.vertex.xyz = rotate(v.vertex.xyz, r3);
-
-                v.normal = rotate(v.normal, r3);
-
-                v.vertex.xyz = (v.vertex.xyz * s) + p.position;
-
-                o.vertex = mul(UNITY_MATRIX_VP, float4(v.vertex.xyz, 1.0));
-                o.normal = UnityObjectToWorldNormal(v.normal);
-                o.uv.xy = p.uv.xy;
-                o.uv.z = p.targetId;
-                o.useTex = p.useTexture;
-
-                return o;
-            }
-
-            fixed4 frag(v2f i) : SV_Target
-            {
-                fixed4 col;
-
-                if (i.useTex == 1)
+                // ポリゴンの外に出たら終わり
+                if (!all(max(0.5 - abs(localPos), 0.0)))
                 {
-                    col = UNITY_SAMPLE_TEX2DARRAY(_Textures, i.uv);
-                    col = pow(col, 2.2);
+                    break;
                 }
-                else
-                {
-                    float diff = clamp(dot(i.normal, normalize(float3(0.1, -1.0, 0))), 0.05, 0.8);
-                    col = diff.xxxx;
-                }
-
-                return col;
             }
-            ENDCG
+
+            if (i.useTex == 1)
+            {
+                col = UNITY_SAMPLE_TEX2DARRAY(_Textures, i.uv);
+                col = pow(col, 2.2);
+            }
+            else
+            {
+                float diff = clamp(dot(i.normal, normalize(float3(0.1, -1.0, 0))), 0.05, 0.8);
+                col = diff.xxxx;
+            }
+            col.a = alpha;
+            return col;
+        }
+        ENDCG
+
+        
         }
     }
 }
