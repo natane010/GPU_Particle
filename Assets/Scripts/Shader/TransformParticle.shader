@@ -13,8 +13,9 @@
     {
         Tags {
             "Queue" = "Transparent"
-                "RenderType" = "Transparent" }
-        LOD 100
+            "RenderType" = "Transparent"
+            }
+        LOD 200
         
 
         Pass
@@ -147,13 +148,15 @@
             {
                 col = UNITY_SAMPLE_TEX2DARRAY(_Textures, i.uv);
                 col = pow(col, 2.2);
+                col.a = alpha;
             }
             else
             {
                 float diff = clamp(dot(i.normal, normalize(float3(0.1, -1.0, 0))), 0.05, 0.8);
                 col = diff.xxxx;
+                col.a = alpha;
             }
-            col.a = alpha;
+            
             return col;
         }
         ENDCG

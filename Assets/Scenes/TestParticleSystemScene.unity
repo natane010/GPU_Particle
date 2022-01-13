@@ -300,7 +300,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 405728922}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!4 &405728926
 Transform:
   m_ObjectHideFlags: 0
@@ -308,12 +308,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 405728922}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5666273, y: 0.40750957, z: 22.564383}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_Father: {fileID: 1762125858}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &602700320
 GameObject:
@@ -364,7 +364,7 @@ MonoBehaviour:
   _target: {fileID: 602700320}
   _minScale: 0.5
   _maxScale: 1
-  _texture: {fileID: 2800000, guid: 2f135a76601ad714f8427b5daf2bc71c, type: 3}
+  _texture: {fileID: 2800000, guid: 901010611c3dd1745b9c3eb1e1d1bb0b, type: 3}
 --- !u!136 &602700323
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -769,6 +769,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1762125858}
   - component: {fileID: 1762125857}
+  - component: {fileID: 1762125859}
   m_Layer: 0
   m_Name: PlayObjects
   m_TagString: Untagged
@@ -805,9 +806,24 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1976757400}
+  - {fileID: 405728926}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1762125859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762125856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6002e70ad5912549914fd86752c508e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  xSpeed: 3
+  ySpeed: 5
 --- !u!1 &1930770161
 GameObject:
   m_ObjectHideFlags: 0
@@ -857,7 +873,7 @@ MonoBehaviour:
   _target: {fileID: 1930770161}
   _minScale: 0.5
   _maxScale: 1
-  _texture: {fileID: 2800000, guid: 2f135a76601ad714f8427b5daf2bc71c, type: 3}
+  _texture: {fileID: 2800000, guid: 901010611c3dd1745b9c3eb1e1d1bb0b, type: 3}
 --- !u!136 &1930770164
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -921,7 +937,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1930770161}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1976757399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,23 +1028,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _count
-      value: 50000
+      value: 20000
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _offset.x
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _offset.y
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _offset.z
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _baseScale
-      value: 0.05
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _particleMat

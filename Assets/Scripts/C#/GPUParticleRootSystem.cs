@@ -17,6 +17,8 @@ public enum UpdateMethodType
     Target,
     Explode,
     Gravity,
+    KeepPosition,
+    UpdatePosition,
 }
 
 public interface GPUParticleTarget
@@ -147,6 +149,8 @@ public class GPUParticleRootSystem : MonoBehaviour
     private int _kernelUpdateAsTarget = 0;
     private int _kernelUpdateAsExplosion = 0;
     private int _kernelUpdateAsGravity = 0;
+    private int _kernelUpdateKeepAsPosition = 0;
+    private int _kernelUpdateAsPosition = 0;
 
     private int _currentUpdateKernel = 0;
 
@@ -254,6 +258,12 @@ public class GPUParticleRootSystem : MonoBehaviour
 
             case UpdateMethodType.Gravity:
                 _currentUpdateKernel = _kernelUpdateAsGravity;
+                break;
+            case UpdateMethodType.KeepPosition:
+                _currentUpdateKernel = _kernelUpdateKeepAsPosition;
+                break;
+            case UpdateMethodType.UpdatePosition:
+                _currentUpdateKernel = _kernelUpdateAsPosition;
                 break;
         }
     }
@@ -406,6 +416,8 @@ public class GPUParticleRootSystem : MonoBehaviour
         _kernelUpdateAsTarget = _computeShader.FindKernel("UpdateAsTarget");
         _kernelUpdateAsExplosion = _computeShader.FindKernel("UpdateAsExplosion");
         _kernelUpdateAsGravity = _computeShader.FindKernel("UpdateAsGravity");
+        _kernelUpdateKeepAsPosition = _computeShader.FindKernel("UpdateKeepAsPosition");
+        _kernelUpdateAsPosition = _computeShader.FindKernel("UpdateAsTargetPosition");
 
         _currentUpdateKernel = _kernelUpdateAsTarget;
 

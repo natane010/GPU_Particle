@@ -28,20 +28,30 @@ public class TestGPUParticleController : MonoBehaviour
 
         _particleSystem.SetGroup(_groups[0]);
         _particleSystem.Play();
+
+        //InvokeRepeating("Next", 1, 2);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.N))
+        //Next();
+        //KeepPosition();
+        if (Input.GetKey(KeyCode.U))
+        {
+            UpdatePosition();
+        }
+        if (Input.GetKey(KeyCode.N))
         {
             Next();
         }
-
+        if (Input.GetKey(KeyCode.K))
+        {
+            KeepPosition();
+        }
         if (Input.GetKeyDown(KeyCode.G))
         {
             Gravity();
         }
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             Explosion();
@@ -63,13 +73,22 @@ public class TestGPUParticleController : MonoBehaviour
         _particleSystem.ChangeUpdateMethod(UpdateMethodType.Target);
         _particleSystem.SetGroup(CurrentGroup);
     }
+    private void KeepPosition()
+    {
+        _particleSystem.ChangeUpdateMethodWithClear(UpdateMethodType.KeepPosition);
+        _particleSystem.SetGroup(CurrentGroup);
+    }
 
     private void Gravity()
     {
         _particleSystem.SetOrigin(Vector3.one);
         _particleSystem.ChangeUpdateMethodWithClear(UpdateMethodType.Gravity);
     }
-
+    private void UpdatePosition()
+    {
+        _particleSystem.ChangeUpdateMethodWithClear(UpdateMethodType.UpdatePosition);
+        _particleSystem.SetGroup(CurrentGroup);
+    }
     private void Explosion()
     {
         for (int i = 0; i < _initData.Length; i++)

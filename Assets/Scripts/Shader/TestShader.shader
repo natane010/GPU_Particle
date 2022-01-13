@@ -2,35 +2,25 @@ Shader "Custom/TestShader"
 {
 Properties
 {
-_Color("Color", Color) = (1, 1, 1, 1)
+    _Color("Color", Color) = (1, 1, 1, 1)
     _Intensity("Intensity", Range(0, 1)) = 0.1
     [IntRange] _Loop("Loop", Range(0, 128)) = 32
+    _mainTex("MainTex", 2D) = "black"{ }
 }
 
 CGINCLUDE
 
 #include "UnityCG.cginc"
-struct TransformParticle
-{
-    int isActive;
-    int targetId;
-    float2 uv;
-    float3 targetPosition;
-    float speed;
-    float3 position;
-    float scale;
-    float4 velocity;
-    float3 horizontal;
-};
 struct appdata
 {
     float4 vertex : POSITION;
     float3 normal : NORMAL;
-    
+    float2 uv : TEXCOORD0;
 };
 
 struct v2f
 {
+    float2 uv : TEXCOORD0;
     float4 vertex   : SV_POSITION;
     float3 worldPos : TEXCOORD1;
     float3 normal : NORMAL;
@@ -40,6 +30,7 @@ struct v2f
 float4 _Color;
 float _Intensity;
 int _Loop;
+sampler2D _mainTex;
 
 inline float densityFunction(float3 p)
 {
@@ -53,11 +44,13 @@ v2f vert(appdata v)
     // ポリゴン表面の座標がフラグメントシェーダで使えるようにする
     o.worldPos = mul(unity_ObjectToWorld, v.vertex);
     o.normal = UnityObjectToWorldNormal(v.normal);
+    o.uv = v.uv;
     return o;
 }
 
 float4 frag(v2f i) : SV_Target
 {
+    float2 uv = i.uv;
     // ワールド空間でのポリゴン表面座標とそこへのカメラからの向き
     float3 worldPos = i.worldPos;
     float3 worldDir = normalize(worldPos - _WorldSpaceCameraPos);
@@ -92,11 +85,11 @@ float4 frag(v2f i) : SV_Target
         if (!all(max(0.5 - abs(localPos), 0.0))) break;
     }
     float4 color = _Color;
-    
+    fixed4 color1 = tex2D(_mainTex, uv);
 
    
-    color.a *= alpha;
-    return color;
+    color1.a *= alpha;
+    return color1;
 }
 
 ENDCG

@@ -5,6 +5,8 @@
 #pragma kernel UpdateAsTarget
 #pragma kernel UpdateAsExplosion
 #pragma kernel UpdateAsGravity
+#pragma kernel UpdateKeepAsPosition
+#pragma kernel UpdateAsTargetPosition
 
 #define THREAD_NUM 64
 
@@ -104,12 +106,37 @@ void Disable(uint id : SV_DispatchThreadID)
     _Particles[id] = p;
 }
 [numthreads(THREAD_NUM, 1, 1)]
+void UpdateKeepAsPosition(uint id : SV_DispatchThreadID)
+{
+    TransformParticle p = _Particles[id];
+    p.velocity = 0;
+    p.position = p.targetPosition;
+    p.useTexture = 1;
+    _Particles[id] = p;
+}
+[numthreads(THREAD_NUM, 1, 1)]
 void UpdateAsTarget(uint id : SV_DispatchThreadID)
 {
     TransformParticle p = _Particles[id];
 
     float3 delta = p.targetPosition - p.position;
     float3 pos = (delta + p.velocity.xyz * 0.2) * _DeltaTime * p.speed;
+
+    const float k = 5.5;
+    p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
+
+    p.position += pos;
+    p.useTexture = 1;
+
+    _Particles[id] = p;
+}
+[numthreads(THREAD_NUM, 1, 1)]
+void UpdateAsTargetPosition(uint id : SV_DispatchThreadID)
+{
+    TransformParticle p = _Particles[id];
+
+    float3 delta = p.targetPosition - p.position;
+    float3 pos = delta * _DeltaTime * p.speed;
 
     const float k = 5.5;
     p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
