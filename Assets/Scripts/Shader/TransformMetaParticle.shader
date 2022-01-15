@@ -122,6 +122,30 @@ Shader "Custom/TransformMetaParticle"
 		            }
 	            return d1;
             }
+
+            //実装したい機能
+            /*
+            float map(float3 pg)
+            {
+                float d = dot(_Scale, 1.0);
+                for (int i = 0; i < _NumEntities; ++i) 
+                {
+                    Metaball mb = _Entities[i];
+                    if (mb.negative) 
+                    {
+                        d = soft_max(d, -sdSphere(pg - mb.position, mb.radius), mb.softness);
+                    }
+                    else 
+                    {
+                        d = soft_min(d, sdSphere(pg - mb.position, mb.radius), mb.softness);
+                    }
+                }
+                d = max(d, sdBox(localize(pg), _Scale*0.5));
+                return d;
+            }
+            */
+            //
+
             //最終的な距離
             float dist(float3 p, TransformParticle t)
             {	
