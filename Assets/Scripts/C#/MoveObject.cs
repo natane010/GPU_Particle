@@ -15,9 +15,9 @@ public class MoveObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        a.y += Time.deltaTime * xSpeed;
-        a.x += Time.deltaTime * ySpeed;
-        gameObject.transform.eulerAngles = a;
+        //a.y += Time.deltaTime * xSpeed;
+        //a.x += Time.deltaTime * ySpeed;
+        //gameObject.transform.eulerAngles = a;
         if (Input.GetKey(KeyCode.RightArrow))
         {
             this.transform.position += new Vector3(1, 0, 0) * Time.deltaTime;
