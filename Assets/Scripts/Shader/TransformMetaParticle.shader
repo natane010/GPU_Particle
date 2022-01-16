@@ -6,10 +6,18 @@ Shader "Custom/TransformMetaParticle"
         _ypos("floor height",float)=-0.25
 
     }
-        SubShader
+    SubShader
     {
-        Tags { "RenderType" = "Opaque" }
-        LOD 100
+        Tags 
+        {
+            "Queue" = "Transparent"
+            "RenderType" = "TransParent"
+            "LightMode" = "ForwardBase"
+        }
+        LOD 300
+
+        Cull Front
+        //Blend OneMinusDstColor One
 
         Pass
         {
@@ -54,6 +62,14 @@ Shader "Custom/TransformMetaParticle"
                 float3 pos : TEXCOORD1;
                 float3 normal : NORMAL;
                 int useTex : TEXCOORD2;
+                float id : TEXCOORD3;
+            };
+
+            struct pout
+            {
+                float4 pixel: SV_Target;
+	            float depth : SV_Depth;
+
             };
 
             StructuredBuffer<TransformParticle> _Particles;
@@ -123,28 +139,7 @@ Shader "Custom/TransformMetaParticle"
 	            return d1;
             }
 
-            //実装したい機能
-            /*
-            float map(float3 pg)
-            {
-                float d = dot(_Scale, 1.0);
-                for (int i = 0; i < _NumEntities; ++i) 
-                {
-                    Metaball mb = _Entities[i];
-                    if (mb.negative) 
-                    {
-                        d = soft_max(d, -sdSphere(pg - mb.position, mb.radius), mb.softness);
-                    }
-                    else 
-                    {
-                        d = soft_min(d, sdSphere(pg - mb.position, mb.radius), mb.softness);
-                    }
-                }
-                d = max(d, sdBox(localize(pg), _Scale*0.5));
-                return d;
-            }
-            */
-            //
+            
 
             //最終的な距離
             float dist(float3 p, TransformParticle t)
@@ -263,13 +258,13 @@ Shader "Custom/TransformMetaParticle"
 	            float3 viewdir = normalize(pos-_WorldSpaceCameraPos);
 	            half3 lightdir = normalize(UnityWorldSpaceLightDir(pos));	
 	            float sha = softray(mpos,lightdir,3.3, t);
-	            float4 Color = material(mpos, t);
+                
 				
 	            float NdotL = max(0,dot(normal,lightdir));
 	            float3 R = -normalize(reflect(lightdir,normal));
 	            float3 spec =pow(max(dot(R,-viewdir),0),10);
 
-	            float4 col =  sha*(Color* NdotL+float4(spec,0));
+	            float4 col =  sha*(NdotL+float4(spec,0));
 	            return col;
             }
 
@@ -278,7 +273,7 @@ Shader "Custom/TransformMetaParticle"
                 TransformParticle p = _Particles[id];
 
                 v2f o;
-
+                o.id = id;
                 float s = _BaseScale * p.scale * p.isActive;
 
                 fixed r = 2.0 * (rand(p.targetPosition.xy) - 0.5);
@@ -295,13 +290,14 @@ Shader "Custom/TransformMetaParticle"
                 o.uv.xy = p.uv.xy;
                 o.uv.z = p.targetId;
                 o.useTex = p.useTexture;
+                
 
                 return o;
             }
 
-            fixed4 frag(v2f i, uint id : SV_InstanceID) : SV_Target
+            pout frag(v2f i) : SV_Target
             {
-                TransformParticle p = _Particles[id];
+                TransformParticle p = _Particles[i.id];
 
                 fixed4 col;
 
@@ -318,7 +314,8 @@ Shader "Custom/TransformMetaParticle"
                 else
                 {
                     float diff = clamp(dot(i.normal, normalize(float3(0.1, -1.0, 0))), 0.05, 0.8);
-                    col = diff.xxxx;
+                    col.rgb = diff.xxx;
+                    col.z = 0;
                 }
 
                 if (t == -1) 
@@ -331,7 +328,13 @@ Shader "Custom/TransformMetaParticle"
 	                col += lighting(pos, p);
 	            }
 
-                return col;
+                pout o;
+                o.pixel = col;
+                float4 curp = UnityObjectToClipPos(float4(ro + rd * t, 1));
+                o.depth = (curp.z) / (curp.w); //Drawing depth
+
+                return o;
+                //return col;
             }
             ENDCG
         }

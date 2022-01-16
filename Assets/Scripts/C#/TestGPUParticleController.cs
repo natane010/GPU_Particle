@@ -40,7 +40,7 @@ public class TestGPUParticleController : MonoBehaviour
         {
             UpdatePosition();
         }
-        if (Input.GetKey(KeyCode.N))
+        if (Input.GetKeyDown(KeyCode.N))
         {
             Next();
         }

@@ -26,5 +26,14 @@ public class MoveObject : MonoBehaviour
         {
             this.transform.position -= new Vector3(1, 0, 0) * Time.deltaTime;
         }
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            this.transform.position += new Vector3(0, 1, 0) * Time.deltaTime;
+        }
+        else if (Input.GetKey(KeyCode.DownArrow))
+        {
+            this.transform.position -= new Vector3(0, 1, 0) * Time.deltaTime;
+        }
+
     }
 }
