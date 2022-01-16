@@ -207,7 +207,6 @@ public class GPUParticleRootSystem : MonoBehaviour
         _computeShader.SetVector(_propertyDef.OriginID, origin);
     }
 
-   
     public void SetOffset(Vector3 offset)
     {
         _offset = offset;

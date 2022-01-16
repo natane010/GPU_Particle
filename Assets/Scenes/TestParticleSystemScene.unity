@@ -237,7 +237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &405728923
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -326,7 +326,6 @@ GameObject:
   - component: {fileID: 602700321}
   - component: {fileID: 602700325}
   - component: {fileID: 602700324}
-  - component: {fileID: 602700323}
   - component: {fileID: 602700322}
   m_Layer: 0
   m_Name: 3Dmodel
@@ -365,20 +364,6 @@ MonoBehaviour:
   _minScale: 0.5
   _maxScale: 1
   _texture: {fileID: 2800000, guid: 2f135a76601ad714f8427b5daf2bc71c, type: 3}
---- !u!136 &602700323
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 602700320}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &602700324
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -822,8 +807,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6002e70ad5912549914fd86752c508e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSpeed: 3
-  ySpeed: 5
+  xSpeed: 1
+  ySpeed: 1
+  zSpeed: 1
+  qSpeed: 50
 --- !u!1 &1930770161
 GameObject:
   m_ObjectHideFlags: 0
@@ -835,7 +822,6 @@ GameObject:
   - component: {fileID: 1930770162}
   - component: {fileID: 1930770166}
   - component: {fileID: 1930770165}
-  - component: {fileID: 1930770164}
   - component: {fileID: 1930770163}
   m_Layer: 0
   m_Name: 3Dmodel
@@ -874,20 +860,6 @@ MonoBehaviour:
   _minScale: 0.5
   _maxScale: 1
   _texture: {fileID: 2800000, guid: 901010611c3dd1745b9c3eb1e1d1bb0b, type: 3}
---- !u!136 &1930770164
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1930770161}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &1930770165
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1031,20 +1003,24 @@ PrefabInstance:
       value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
+      propertyPath: _gravity
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _offset.x
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _offset.y
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _offset.z
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _baseScale
-      value: 0.18
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _particleMat
@@ -1056,7 +1032,7 @@ PrefabInstance:
       objectReference: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _initDataCount
-      value: 5000
+      value: 500000
       objectReference: {fileID: 0}
     - target: {fileID: 8013832515652379022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: m_RootOrder

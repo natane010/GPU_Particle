@@ -8,16 +8,27 @@ public class MoveObject : MonoBehaviour
     Vector3 a;
     [SerializeField]float xSpeed;
     [SerializeField]float ySpeed;
+    [SerializeField]float zSpeed;
+    Quaternion b;
+    [SerializeField] float qSpeed;
+
     private void Start()
     {
         a = Vector3.zero;
+        b = Quaternion.identity;
     }
     // Update is called once per frame
     void Update()
     {
-        //a.y += Time.deltaTime * xSpeed;
-        //a.x += Time.deltaTime * ySpeed;
+        a.y += Time.deltaTime * xSpeed;
+        a.x += Time.deltaTime * ySpeed;
+        a.z += Time.deltaTime * zSpeed;
         //gameObject.transform.eulerAngles = a;
+
+        b = Quaternion.Euler(a * qSpeed);
+
+        this.gameObject.transform.rotation = b;
+
         if (Input.GetKey(KeyCode.RightArrow))
         {
             this.transform.position += new Vector3(1, 0, 0) * Time.deltaTime;

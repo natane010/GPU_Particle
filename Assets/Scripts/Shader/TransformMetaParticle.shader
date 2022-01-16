@@ -62,7 +62,7 @@ Shader "Custom/TransformMetaParticle"
                 float3 pos : TEXCOORD1;
                 float3 normal : NORMAL;
                 int useTex : TEXCOORD2;
-                float id : TEXCOORD3;
+                uint id : TEXCOORD3;
             };
 
             struct pout
@@ -133,7 +133,7 @@ Shader "Custom/TransformMetaParticle"
 	            for (int i = 1; i < 6; ++i) {
 				
 		            d1 = Metaballone(p, i, t);
-		            d1 = SmoothMin(d1,d2,20);
+		            d1 = SmoothMin(d1,d2,t.scale);
 		            d2 =d1;
 		            }
 	            return d1;
@@ -147,7 +147,7 @@ Shader "Custom/TransformMetaParticle"
 	            float y = p.y;
 	            float d1 = Metaball(p, t);
 	            float d2 = y - (_ypos); //For floor
-	            d1 = SmoothMin(d1, d2, 20);
+	            d1 = SmoothMin(d1, d2, t.scale);
 	            return d1;
             }
             //レイマーチ
