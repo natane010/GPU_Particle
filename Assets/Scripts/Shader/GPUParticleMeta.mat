@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: GPUParticleMeta
-  m_Shader: {fileID: 4800000, guid: c4243ce8519be6a4aba88ea2a24ebe42, type: 3}
+  m_Shader: {fileID: 4800000, guid: aa62ef6029e97f647a9f40dd3e4ce132, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0

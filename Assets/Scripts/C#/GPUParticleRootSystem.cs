@@ -79,7 +79,7 @@ public struct InitData
     public Vector2 uv;
     public Vector3 horizontal;
 }
-
+[ExecuteAlways]
 public class GPUParticleRootSystem : MonoBehaviour
 {
     private class PropertyDef
@@ -137,6 +137,7 @@ public class GPUParticleRootSystem : MonoBehaviour
     private Matrix4x4[] _matrixData = new Matrix4x4[30];
     private TransformParticle[] _particleData = null;
     private InitData[] _initDataList = null;
+    Vector4[] _speres;
 
     private PropertyDef _propertyDef = null;
 
@@ -159,7 +160,12 @@ public class GPUParticleRootSystem : MonoBehaviour
    
     private void Awake()
     {
+        _speres = new Vector4[_count];
         Initialize();
+    }
+    private void Start()
+    {
+        //_particleMat.SetInt("_SphereCount", _count);
     }
 
     private void Update()
@@ -168,6 +174,17 @@ public class GPUParticleRootSystem : MonoBehaviour
         {
             DrawParticles();
         }
+        //for (var i = 0; i < _particleData.Length; i++)
+        //{
+        //    var col = _particleData[i];
+        //    var t = col.position;
+        //    var center = t;
+        //    var radius = t.z * col.scale / 2;
+        //    // ’†SÀ•W‚Æ”¼Œa‚ðŠi”[
+        //    _particleData[i].position = new Vector3(center.x, center.y, center.z);
+        //    _particleData[i].scale = radius;
+        //}
+        //_particleMat.SetVectorArray("_Spheres", _speres);
     }
 
     private void OnDestroy()

@@ -14,7 +14,7 @@ Shader "Custom/TransformMetaMegaParticle"
             }
             LOD 100
             ZWrite On
-            //Cull Front
+            //Cull Back
             //Blend OneMinusDstColor One
             Blend SrcAlpha OneMinusSrcAlpha
             Pass
@@ -60,6 +60,7 @@ Shader "Custom/TransformMetaMegaParticle"
                     float3 pos : TEXCOORD1;
                     float3 normal : NORMAL;
                     int useTex : TEXCOORD2;
+                    uint id : SV_InstanceID;
                 };
 
                 StructuredBuffer<TransformParticle> _Particles;
@@ -108,6 +109,26 @@ Shader "Custom/TransformMetaMegaParticle"
                     float depth : SV_Depth;
                 };
 
+                float getDistance(float3 pos)
+                {
+                    float dist = 100000;
+                    for (int i = 0; i < _SphereCount; i++)
+                    {
+                        dist = SmoothMin(dist, sphereDistanceFunction(_Spheres[i], pos), 3);
+                    }
+                    return dist;
+                }
+
+                // –@ü‚ÌŽZo
+                float3 getNormal(const float3 pos)
+                {
+                   float d = 0.0001;
+                   return normalize(float3(
+                       getDistance(pos + float3(d, 0.0, 0.0)) - getDistance(pos + float3(-d, 0.0, 0.0)),
+                       getDistance(pos + float3(0.0, d, 0.0)) - getDistance(pos + float3(0.0, -d, 0.0)),
+                       getDistance(pos + float3(0.0, 0.0, d)) - getDistance(pos + float3(0.0, 0.0, -d))
+                   ));
+                }
 
                 // [“xŒvŽZ
                 inline float getDepth(float3 pos)
@@ -125,14 +146,23 @@ Shader "Custom/TransformMetaMegaParticle"
                     return z;
                     #endif
                 }
-                float getDistance(float3 pos)
+                fixed3 _Colors[MAX_SPHERE_COUNT];
+
+                fixed3 getColor(const float3 pos)
                 {
-                    float dist = 100000;
-                    for (int i = 0; i < _SphereCount; i++)
-                    {
-                        dist = SmoothMin(dist, sphereDistanceFunction(_Spheres[i], pos), 3);
-                    }
-                    return dist;
+                   fixed3 color = fixed3(0, 0, 0);
+                   float weight = 0.01;
+                   for (int i = 0; i < _SphereCount; i++)
+                   {
+                       const float distinctness = 0.7;
+                       const float4 sphere = _Spheres[i];
+                       const float x = clamp((length(sphere.xyz - pos) - sphere.w) * distinctness, 0, 1);
+                       const float t = 1.0 - x * x * (3.0 - 2.0 * x);
+                       color += t * _Colors[i];
+                       weight += t;
+                   }
+                   color /= weight;
+                   return float4(color, 1);
                 }
 
                 v2f vert(appdata v, uint id : SV_InstanceID)
@@ -156,20 +186,20 @@ Shader "Custom/TransformMetaMegaParticle"
                     o.uv.xy = p.uv.xy;
                     o.uv.z = p.targetId;
                     o.useTex = p.useTexture;
-
+                    o.id = id;
 
                     return o;
                 }
 
-                output frag(v2f i, uint id : SV_InstanceID) : SV_Target
+                output frag(v2f i)
                 {
 
-                    TransformParticle p = _Particles[id];
+                    TransformParticle p = _Particles[i.id];
                     output o;
                     fixed4 col;
                     float3 pos = i.pos.xyz;
                     const float3 rayDir = normalize(pos.xyz - _WorldSpaceCameraPos);
-
+                    const half3 halfDir = normalize(_WorldSpaceLightPos0.xyz - rayDir);
                     float4 sphere;
                     sphere.xyz = p.targetPosition;
                     sphere.w = p.scale;
@@ -183,31 +213,41 @@ Shader "Custom/TransformMetaMegaParticle"
                     {
                         float diff = clamp(dot(i.normal, normalize(float3(0.1, -1.0, 0))), 0.05, 0.8);
                         col.rgb = diff.xxx;
-                        col.z = 0;
+                        col.w = 1;
                     }
 
                     o.col = col;
 
-                    for (int i = 0; i < _SphereCount; i++)
-                    {
-                        
-                    }
+                    
+                    //float dist = sphereDistanceFunction(sphere, pos);
+                    
 
                     for (int i = 0; i < 30; i++)
                     {
                         float dist = getDistance(pos);
                         
-                        float dist = sphereDistanceFunction(sphere, pos);
+                        
                         if (dist < 0.001)
                         {
+                            fixed3 norm = getNormal(pos);
+                            fixed3 baseColor = getColor(pos);
+                            baseColor = (col + baseColor) / 2;
+                            //fixed3 color = col;
+                            const float rimPower = 2;
+                            const float rimRate = pow(1 - abs(dot(norm, rayDir)), rimPower);
+                            const fixed3 rimColor = fixed3(1.5, 1.5, 1.5);
+                            float highlight = dot(norm, halfDir) > 0.99 ? 1 : 0;
+                            fixed3 color = clamp(lerp(baseColor, rimColor, rimRate) + highlight, 0, 1);
+                            float alpha = clamp(lerp(0.2, 4, rimRate) + highlight, 0, 1);
+                            o.col += fixed4(color, alpha);
                             o.depth = getDepth(pos);
                             return o;
                         }
                         pos += dist * rayDir;
                     }
 
-                    o.col = 0;
-                    o.depth = 0;
+                    //o.col.a = ;
+                    //.depth = 0;
                     return o;
                     //return col;
                 }

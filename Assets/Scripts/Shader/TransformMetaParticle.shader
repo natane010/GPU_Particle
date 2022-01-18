@@ -295,7 +295,7 @@ Shader "Custom/TransformMetaParticle"
                 return o;
             }
 
-            pout frag(v2f i) : SV_Target
+            pout frag(v2f i)
             {
                 TransformParticle p = _Particles[i.id];
 
@@ -314,8 +314,8 @@ Shader "Custom/TransformMetaParticle"
                 else
                 {
                     float diff = clamp(dot(i.normal, normalize(float3(0.1, -1.0, 0))), 0.05, 0.8);
-                    col.rgb = diff.xxx;
-                    col.z = 0;
+                    col = diff.xxxx;
+                    //col.w = 0;
                 }
 
                 if (t == -1) 
@@ -326,10 +326,11 @@ Shader "Custom/TransformMetaParticle"
                 {
 	                float3 pos = ro + rd * t;
 	                col += lighting(pos, p);
+                    
 	            }
 
                 pout o;
-                o.pixel = col;
+                o.pixel = col / 2;
                 float4 curp = UnityObjectToClipPos(float4(ro + rd * t, 1));
                 o.depth = (curp.z) / (curp.w); //Drawing depth
 
