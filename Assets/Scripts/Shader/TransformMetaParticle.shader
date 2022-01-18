@@ -15,10 +15,10 @@ Shader "Custom/TransformMetaParticle"
             "LightMode" = "ForwardBase"
         }
         LOD 300
-
+        ZWrite On
         Cull Front
-        //Blend OneMinusDstColor One
-
+        Blend OneMinusDstColor One
+        //Blend SrcAlpha OneMinusSrcAlpha
         Pass
         {
             CGPROGRAM

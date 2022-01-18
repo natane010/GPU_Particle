@@ -11,5 +11,10 @@ float ball(float3 p,float s)
 {
 	return length(p)-s;
 }
+//‹…‚Ì‹——£ŠÖ”ª‚æ‚è³Šm
+float4 sphereDistanceFunction(float4 sphere, float3 pos)
+{
+    return length(sphere.xyz - pos) - sphere.w;
+}
 
 #endif

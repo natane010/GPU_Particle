@@ -237,7 +237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &405728923
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -542,7 +542,7 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -810,7 +810,7 @@ MonoBehaviour:
   xSpeed: 1
   ySpeed: 1
   zSpeed: 1
-  qSpeed: 50
+  qSpeed: 10
 --- !u!1 &1930770161
 GameObject:
   m_ObjectHideFlags: 0
@@ -1000,7 +1000,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _count
-      value: 1000
+      value: 5000
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _gravity
@@ -1008,24 +1008,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _offset.x
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _offset.y
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _offset.z
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _baseScale
-      value: 0.05
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _particleMat
       value: 
-      objectReference: {fileID: 2100000, guid: e60aba5be37e7d14e9cd0f900d965f82, type: 2}
+      objectReference: {fileID: 2100000, guid: ee395b8cce94068418c11914bfe4114f, type: 2}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _particleMesh
       value: 
