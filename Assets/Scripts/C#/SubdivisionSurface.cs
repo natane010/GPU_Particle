@@ -7,6 +7,9 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEditor;
 
+
+//Copyrighticj2018 mattatz
+
 public class Model
 {
     List<Vertex> vertices;
