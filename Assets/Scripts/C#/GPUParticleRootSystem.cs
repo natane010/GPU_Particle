@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-//参考ライセンス
-//http://www.apache.org/licenses/LICENSE-2.0
 
 public enum ComputeType
 {
