@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(MeshFilter))]
 public class GPU3DTarget : MonoBehaviour, GPUParticleTarget
 {
     [SerializeField] private GameObject _target;
     [SerializeField] private float _minScale = 0.5f;
     [SerializeField] private float _maxScale = 1.0f;
     [SerializeField] protected Texture2D _texture = null;
+    
 
     protected GameObject Target => _target == null ? gameObject : _target;
     private Mesh _mesh = null;
@@ -23,7 +24,7 @@ public class GPU3DTarget : MonoBehaviour, GPUParticleTarget
     public float MaxScale => _maxScale;
     private uint[] _indices = null;
     public uint[] SubGroupIndices => _indices;
-    public virtual void Initialize() { }
+    public virtual void Initialize() {}
     public void SetStartIndex(int startIdx)
     {
         _indices = new uint[VertexCount];

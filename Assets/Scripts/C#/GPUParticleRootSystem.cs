@@ -33,6 +33,7 @@ public interface GPUParticleTarget
     float MaxScale { get; }
     uint[] SubGroupIndices { get; }
 
+    
     void Initialize();
     void SetStartIndex(int startIdx);
 }
@@ -163,10 +164,6 @@ public class GPUParticleRootSystem : MonoBehaviour
         _speres = new Vector4[_count];
         Initialize();
     }
-    private void Start()
-    {
-        //_particleMat.SetInt("_SphereCount", _count);
-    }
 
     private void Update()
     {
@@ -174,17 +171,6 @@ public class GPUParticleRootSystem : MonoBehaviour
         {
             DrawParticles();
         }
-        //for (var i = 0; i < _particleData.Length; i++)
-        //{
-        //    var col = _particleData[i];
-        //    var t = col.position;
-        //    var center = t;
-        //    var radius = t.z * col.scale / 2;
-        //    // ’†SÀ•W‚Æ”¼Œa‚ðŠi”[
-        //    _particleData[i].position = new Vector3(center.x, center.y, center.z);
-        //    _particleData[i].scale = radius;
-        //}
-        //_particleMat.SetVectorArray("_Spheres", _speres);
     }
 
     private void OnDestroy()

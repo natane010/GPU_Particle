@@ -73,7 +73,7 @@ public class GPUParticleTargetGroups : MonoBehaviour, GPUParticleTargetGroup
 
     private void CreateTextureArray()
     {
-        
+        Debug.Log("Create all textures as array. : " + _particleTargets.Length);
 
         int count = _particleTargets.Length;
         int width = _particleTargets[0].Texture.width;
