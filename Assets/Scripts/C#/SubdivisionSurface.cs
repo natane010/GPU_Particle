@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEditor;
 
-
+//https://github.com/mattatz/unity-subdivision-surface/tree/master/Assets
 //CopyrightÅicÅj2018 mattatz
 
 public class Model
@@ -237,11 +237,19 @@ public class SubdivisionSurface
     {
         var model = Subdivide(source, details);
         var mesh = model.Build(weld);
-        mesh.OptimizeReorderVertexBuffer();
+        var uvs = new Vector2[]
+        {
+            new Vector2(0f, 0f),
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(1f, 0f)
+        };
+        
         mesh.RecalculateNormals();
         mesh.RecalculateTangents();
         mesh.RecalculateUVDistributionMetrics();
         mesh.RecalculateBounds();
+        
         
         //AssetDatabase.CreateAsset(mesh, "Assets/prefabs/mekemesh" + count + ".mesh");
         return mesh;

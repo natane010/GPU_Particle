@@ -251,9 +251,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93109c22779d52e4097ca1d4e9d375fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  details: 1
-  weld: 0
-  count: 1500
+  details: 4
+  weld: 1
+  count: 1201218
+  sphere: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!135 &1705784506
 SphereCollider:
   m_ObjectHideFlags: 0
