@@ -62,7 +62,7 @@ Shader "Custom/TransformMetaParticle"
                 float3 pos : TEXCOORD1;
                 float3 normal : NORMAL;
                 int useTex : TEXCOORD2;
-                uint id : TEXCOORD5;
+                uint id : SV_InstanceID;
             };
 
             struct pout
