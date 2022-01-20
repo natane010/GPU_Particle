@@ -16,7 +16,7 @@ Shader "Custom/TransformMetaParticle"
         }
         LOD 300
         ZWrite On
-        Cull Front
+        //Cull Front
         Blend OneMinusDstColor One
         //Blend SrcAlpha OneMinusSrcAlpha
         Pass
@@ -62,7 +62,7 @@ Shader "Custom/TransformMetaParticle"
                 float3 pos : TEXCOORD1;
                 float3 normal : NORMAL;
                 int useTex : TEXCOORD2;
-                uint id : TEXCOORD3;
+                uint id : TEXCOORD5;
             };
 
             struct pout
@@ -158,12 +158,12 @@ Shader "Custom/TransformMetaParticle"
 	            float outside = dist(ro, p) < 0 ? -1 : +1;//レイのスタート地点が物体の中にあるか外にあるか
 	            float pixelradius = 0.02;
 	            float omega = 1.2;
-	            float t =0.0001;
+	            float t =0.001;
 	            float step = 0;
-	            float minpixelt =999999999;
+	            float minpixelt =99999999;
 	            float mint = 0;
 	            float hit = 0.01;
-		        for (int i = 0; i < 60; ++i) 
+		        for (int i = 0; i < 30; ++i) 
                 {
 
 			        float radius = outside * dist(ro + rd * t, p);
@@ -295,7 +295,7 @@ Shader "Custom/TransformMetaParticle"
                 return o;
             }
 
-            pout frag(v2f i)
+            pout frag(v2f i) : SV_TARGET
             {
                 TransformParticle p = _Particles[i.id];
 
@@ -310,6 +310,17 @@ Shader "Custom/TransformMetaParticle"
                 {
                     col = UNITY_SAMPLE_TEX2DARRAY(_Textures, i.uv);
                     col = pow(col, 2.2);
+                    if (t == -1)
+                    {
+                        clip(-1);
+                    }
+                    else
+                    {
+                        float3 pos = ro + rd * t;
+                        col += lighting(pos, p);
+
+                    }
+
                 }
                 else
                 {
@@ -318,19 +329,10 @@ Shader "Custom/TransformMetaParticle"
                     //col.w = 0;
                 }
 
-                if (t == -1) 
-                {
-	                clip(-1);
-	            }
-	            else
-                {
-	                float3 pos = ro + rd * t;
-	                col += lighting(pos, p);
-                    
-	            }
+                
 
                 pout o;
-                o.pixel = col / 2;
+                o.pixel = col;
                 float4 curp = UnityObjectToClipPos(float4(ro + rd * t, 1));
                 o.depth = (curp.z) / (curp.w); //Drawing depth
 

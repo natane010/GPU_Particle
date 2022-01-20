@@ -71,9 +71,7 @@ Shader "Custom/TransformMetaMegaParticle"
                 uniform float _ypos;
 
                 #define PI 3.1415926535
-                #define MAX_SPHERE_COUNT 256
-                float4 _Spheres[MAX_SPHERE_COUNT];
-                int _SphereCount;
+                
 
                 UNITY_DECLARE_TEX2DARRAY(_Textures);
 
@@ -109,24 +107,24 @@ Shader "Custom/TransformMetaMegaParticle"
                     float depth : SV_Depth;
                 };
 
-                float getDistance(float3 pos)
+                float getDistance(float3 pos, float size)
                 {
                     float dist = 100000;
                     for (int i = 0; i < _SphereCount; i++)
                     {
-                        dist = SmoothMin(dist, sphereDistanceFunction(_Spheres[i], pos), 3);
+                        dist = SmoothMin(dist, sphereDistanceFunction(_Spheres[i], pos), size);
                     }
                     return dist;
                 }
 
                 // –@ü‚ÌŽZo
-                float3 getNormal(const float3 pos)
+                float3 getNormal(float3 pos, float size)
                 {
                    float d = 0.0001;
                    return normalize(float3(
-                       getDistance(pos + float3(d, 0.0, 0.0)) - getDistance(pos + float3(-d, 0.0, 0.0)),
-                       getDistance(pos + float3(0.0, d, 0.0)) - getDistance(pos + float3(0.0, -d, 0.0)),
-                       getDistance(pos + float3(0.0, 0.0, d)) - getDistance(pos + float3(0.0, 0.0, -d))
+                       getDistance(pos, size) - getDistance(pos + float3(-d, 0.0, 0.0), size),
+                       getDistance(pos, size) - getDistance(pos + float3(0.0, -d, 0.0), size),
+                       getDistance(pos, size) - getDistance(pos + float3(0.0, 0.0, -d), size)
                    ));
                 }
 
