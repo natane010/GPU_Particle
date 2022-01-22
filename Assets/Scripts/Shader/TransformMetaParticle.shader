@@ -14,7 +14,7 @@ Shader "Custom/TransformMetaParticle"
             "RenderType" = "TransParent"
             "LightMode" = "ForwardBase"
         }
-        LOD 300
+        LOD 100
         ZWrite On
         //Cull Front
         Blend OneMinusDstColor One
@@ -62,7 +62,6 @@ Shader "Custom/TransformMetaParticle"
                 float3 pos : TEXCOORD1;
                 float3 normal : NORMAL;
                 int useTex : TEXCOORD2;
-                uint id : SV_InstanceID;
             };
 
             struct pout
@@ -130,8 +129,8 @@ Shader "Custom/TransformMetaParticle"
             {
 	            float d1;
 	            float d2 =  Metaballone(p, 0, t);
-	            for (int i = 1; i < 6; ++i) {
-				
+	            for (int i = 1; i < 6; ++i) 
+                {
 		            d1 = Metaballone(p, i, t);
 		            d1 = SmoothMin(d1,d2,t.scale);
 		            d2 =d1;
@@ -273,7 +272,7 @@ Shader "Custom/TransformMetaParticle"
                 TransformParticle p = _Particles[id];
 
                 v2f o;
-                o.id = id;
+                
                 float s = _BaseScale * p.scale * p.isActive;
 
                 fixed r = 2.0 * (rand(p.targetPosition.xy) - 0.5);
@@ -295,9 +294,9 @@ Shader "Custom/TransformMetaParticle"
                 return o;
             }
 
-            pout frag(v2f i) : SV_TARGET
+            pout frag(v2f i, uint id : SV_InstanceID) : SV_TARGET
             {
-                TransformParticle p = _Particles[i.id];
+                TransformParticle p = _Particles[id];
 
                 fixed4 col;
 

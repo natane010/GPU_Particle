@@ -4,7 +4,7 @@
     {
         _MainTex("Texture", 2D) = "white" {}
     }
-
+    
     
     
     SubShader
@@ -14,7 +14,7 @@
             "RenderType" = "Transparent"
             }
         LOD 200
-        
+        //Blend OneMinusDstColor One
 
         Pass
         {
