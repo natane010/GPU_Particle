@@ -172,6 +172,7 @@ public class GPUParticleRootSystem : MonoBehaviour
         {
             DrawParticles();
         }
+        Initialize();
     }
 
     private void OnDestroy()

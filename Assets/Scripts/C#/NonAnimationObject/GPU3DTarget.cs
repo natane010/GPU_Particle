@@ -12,12 +12,11 @@ public class GPU3DTarget : MonoBehaviour, GPUParticleTarget
 
     protected GameObject Target => _target == null ? gameObject : _target;
     private Mesh _mesh = null;
-    
     public Mesh Mesh => _mesh ?? (_mesh = GetMesh());
     private Renderer _renderer = null;
     private Renderer Renderer => _renderer ?? (_renderer = Target.GetComponent<Renderer>());
     public virtual int VertexCount => Mesh.vertexCount;
-    public virtual Vector3[] Vertices => Mesh.vertices;
+    public virtual Vector3[] Vertices => GetMesh().vertices;
     public virtual Vector2[] UV => Mesh.uv;
     public virtual Texture2D Texture => _texture != null ? _texture : Renderer.material.mainTexture as Texture2D;
     public Matrix4x4 WorldMatrix => Target.transform.localToWorldMatrix;
@@ -25,7 +24,14 @@ public class GPU3DTarget : MonoBehaviour, GPUParticleTarget
     public float MaxScale => _maxScale;
     private uint[] _indices = null;
     public uint[] SubGroupIndices => _indices;
-    public virtual void Initialize() {}
+    public virtual void Initialize() 
+    {
+       // _mesh = GetMesh();
+    }
+    private void Update()
+    {
+        _mesh = GetMesh();
+    }
     public void SetStartIndex(int startIdx)
     {
         _indices = new uint[VertexCount];
@@ -34,7 +40,7 @@ public class GPU3DTarget : MonoBehaviour, GPUParticleTarget
         {
             _indices[i] = (uint)(i + startIdx);
         }
-        //Mesh.UploadMeshData(true);
+        //_mesh.UploadMeshData(true);
     }
     private Mesh GetMesh()
     {
@@ -49,5 +55,9 @@ public class GPU3DTarget : MonoBehaviour, GPUParticleTarget
             return skin.sharedMesh;
         }
         return null;
+    }
+    void LateUpdate()
+    {
+        Initialize();
     }
 }
