@@ -1,0 +1,227 @@
+//#pragma kernel AnimationSetupParticles
+//#pragma kernel AnimationSetupParticlesImmediately
+//#pragma kernel AnimationDisable
+
+//#pragma kernel AnimationUpdateAsTarget
+//#pragma kernel AnimationUpdateAsExplosion
+//#pragma kernel AnimationUpdateAsGravity
+//#pragma kernel AnimationUpdateKeepAsPosition
+//#pragma kernel AnimationUpdateAsTargetPosition
+
+////#pragma kernel RecalcPosition
+
+//#define THREAD_NUM 64
+
+//#define PI 3.1415926535
+
+//#include "../NonAnimationObject/NoiseMath.cginc"
+
+//struct AnimationTransformParticle
+//{
+//    int isActive;
+//    int targetId;
+//    float2 uv;
+
+//    float3 targetPosition;
+
+//    float speed;
+//    float3 position;
+
+//    int useTexture;
+//    float scale;
+
+//    float4 velocity;
+
+//    float3 horizontal;
+//};
+
+//struct AnimationInitData
+//{
+//    int isActive;
+//    float3 targetPosition;
+
+//    int targetId;
+//    float scale;
+
+//    float4 velocity;
+
+//    float2 uv;
+//    float3 horizontal;
+//};
+
+//RWStructuredBuffer<TransformParticle> _Particles;
+//StructuredBuffer<InitData> _InitDataList;
+//StructuredBuffer<float4x4> _MatrixData;
+//StructuredBuffer<uint> _IndexBuffer;
+
+////RWTexture2D<float4> CurrPositionBuffer;
+////RWTexture2D<float4> CurrNormalBuffer;
+
+//float _DeltaTime;
+//float _Time;
+//float _Gravity;
+//float3 _Origin;
+
+////コメントアウトの部分は作り途中
+////[numthreads(THREAD_NUM, 1, 1)]
+////void RecalcPositions (uint id : SV_DispatchThreadID)
+////{
+
+////    TransformParticle p = _Particles[id];
+////    uint idx = _IndexBuffer[id];
+
+////    int id1 = _IndexBuffer[id * 3];
+////    int id2 = _IndexBuffer[id * 3 + 1];
+////    int id3 = _IndexBuffer[id * 3 + 2];
+
+////    float3 weights = p.velocity;
+
+////    float3 p1 = CurrPositionBuffer[int2(id1, 0)].xyz;
+////    float3 p2 = CurrPositionBuffer[int2(id2, 0)].xyz;
+////    float3 p3 = CurrPositionBuffer[int2(id3, 0)].xyz;
+    
+////    p.targetPosition = p1 + p2 + p3;
+////    //Error avoidance
+////    p.isActive = _InitDataList[idx].isActive;
+////    p.uv = _InitDataList[idx].uv;
+////    p.targetId = _InitDataList[idx].targetId;
+////    p.scale = _InitDataList[idx].scale;
+////    p.horizontal = _InitDataList[idx].horizontal;
+////    p.velocity = _InitDataList[idx].velocity;
+////    _Particles[id] = p;
+////}
+
+//[numthreads(THREAD_NUM, 1, 1)]
+//void AnimationSetupParticles(uint id : SV_DispatchThreadID)
+//{
+//    TransformParticle p = _Particles[id];
+
+//    uint idx = _IndexBuffer[id];
+
+//    float4x4 mat = _MatrixData[_InitDataList[idx].targetId];
+
+//    p.isActive = _InitDataList[idx].isActive;
+//    p.targetPosition = mul(mat, float4(_InitDataList[idx].targetPosition, 1.0)).xyz;
+//    p.uv = _InitDataList[idx].uv;
+//    p.targetId = _InitDataList[idx].targetId;
+//    p.scale = _InitDataList[idx].scale;
+//    p.horizontal = _InitDataList[idx].horizontal;
+//    p.velocity = _InitDataList[idx].velocity;
+
+//    _Particles[id] = p;
+//}
+
+//[numthreads(THREAD_NUM, 1, 1)]
+//void AnimationSetupParticlesImmediately(uint id : SV_DispatchThreadID)
+//{
+//    TransformParticle p = _Particles[id];
+
+//    uint idx = _IndexBuffer[id];
+
+//    float4x4 mat = _MatrixData[_InitDataList[idx].targetId];
+
+//    p.isActive = _InitDataList[idx].isActive;
+//    p.position = mul(mat, float4(_InitDataList[idx].targetPosition, 1.0)).xyz;
+//    p.targetPosition = p.position;
+//    p.uv = _InitDataList[idx].uv;
+//    p.targetId = _InitDataList[idx].targetId;
+//    p.scale = _InitDataList[idx].scale;
+//    p.horizontal = _InitDataList[idx].horizontal;
+//    p.velocity = _InitDataList[idx].velocity;
+
+//    _Particles[id] = p;
+//}
+
+//[numthreads(THREAD_NUM, 1, 1)]
+//void AnimationDisable(uint id : SV_DispatchThreadID)
+//{
+//    TransformParticle p = _Particles[id];
+//    p.isActive = 0;
+//    _Particles[id] = p;
+//}
+
+
+//[numthreads(THREAD_NUM, 1, 1)]
+//void AnimationUpdateKeepAsPosition(uint id : SV_DispatchThreadID)
+//{
+//    TransformParticle p = _Particles[id];
+//    p.velocity = 0;
+//    p.position = p.targetPosition;
+//    p.useTexture = 1;
+//    _Particles[id] = p;
+//}
+//[numthreads(THREAD_NUM, 1, 1)]
+//void AnimationUpdateAsTarget(uint id : SV_DispatchThreadID)
+//{
+//    TransformParticle p = _Particles[id];
+
+//    float3 delta = p.targetPosition - p.position;
+//    float3 pos = (delta + p.velocity.xyz * 0.2) * _DeltaTime * p.speed;
+
+//    const float k = 5.5;
+//    p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
+
+//    p.position += pos;
+//    p.useTexture = 1;
+
+//    _Particles[id] = p;
+//}
+//[numthreads(THREAD_NUM, 1, 1)]
+//void AnimationUpdateAsTargetPosition(uint id : SV_DispatchThreadID)
+//{
+//    TransformParticle p = _Particles[id];
+
+//    float3 delta = p.targetPosition - p.position;
+//    float3 pos = delta * _DeltaTime * p.speed;
+
+//    const float k = 5.5;
+//    p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
+
+//    p.position += pos;
+//    p.useTexture = 1;
+
+//    _Particles[id] = p;
+//}
+
+//[numthreads(THREAD_NUM, 1, 1)]
+//void AnimationUpdateAsExplosion(uint id : SV_DispatchThreadID)
+//{
+//    TransformParticle p = _Particles[id];
+
+//    float3 pos = (p.velocity.xyz) * p.velocity.w * _DeltaTime;
+
+//    float s = sin(rand(id) + _Time) * 0.00003;
+//    p.velocity.xyz += s;
+//    float k = 2.0;
+//    p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
+
+//    p.position += pos;
+
+//    p.useTexture = 0;
+
+//    _Particles[id] = p;
+//}
+
+//[numthreads(THREAD_NUM, 1, 1)]
+//void AnimationUpdateAsGravity(uint id : SV_DispatchThreadID)
+//{
+//    TransformParticle p = _Particles[id];
+
+//    float power = p.velocity.w;
+
+//    float3 d = p.position - _Origin;
+//    float3 up = normalize(d);
+//    float3 forward = normalize(cross(up, p.horizontal) + 0.00001);
+
+//    p.velocity.xyz += (forward * power) * _DeltaTime * p.isActive;
+
+//    p.velocity.xyz += up * _Gravity * _DeltaTime;
+
+//    const float k = 2.5;
+//    p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
+
+//    p.position += p.velocity.xyz * _DeltaTime;
+
+//    _Particles[id] = p;
+//}
+
