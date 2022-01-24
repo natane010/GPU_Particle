@@ -26,11 +26,7 @@ public class GPU3DTarget : MonoBehaviour, GPUParticleTarget
     public uint[] SubGroupIndices => _indices;
     public virtual void Initialize() 
     {
-       // _mesh = GetMesh();
-    }
-    private void Update()
-    {
-        _mesh = GetMesh();
+       
     }
     public void SetStartIndex(int startIdx)
     {
@@ -55,9 +51,5 @@ public class GPU3DTarget : MonoBehaviour, GPUParticleTarget
             return skin.sharedMesh;
         }
         return null;
-    }
-    void LateUpdate()
-    {
-        Initialize();
     }
 }
