@@ -38,6 +38,7 @@ public class GPUParticleTargetGroups : MonoBehaviour, GPUParticleTargetGroup
         {
             Destroy(_textureArray);
         }
+        
     }
     public void Initialize(GPUParticleRootSystem system)
     {
