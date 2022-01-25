@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MoveObject : MonoBehaviour
 {
+    public bool isMove;
+    public bool isRotate;
 
     Vector3 a;
     [SerializeField]float xSpeed;
@@ -24,7 +26,7 @@ public class MoveObject : MonoBehaviour
         a.x += Time.deltaTime * ySpeed;
         a.z += Time.deltaTime * zSpeed;
         //gameObject.transform.eulerAngles = a;
-
+        if(isRotate)
         b = Quaternion.Euler(a * qSpeed);
 
         this.gameObject.transform.rotation = b;

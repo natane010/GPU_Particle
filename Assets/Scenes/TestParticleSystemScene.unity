@@ -196,13 +196,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 164260872}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 207301877}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!137 &164260874
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0
@@ -279,7 +279,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 164260872}
-  m_Mesh: {fileID: 4300000, guid: 8a4263aa26da186428a4fedc9c5f3e54, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 4dfd438db825b9247bd6025c91c1020e, type: 2}
 --- !u!1 &184668936
 GameObject:
   m_ObjectHideFlags: 0
@@ -507,13 +507,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 602700320}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1976974110}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!114 &602700322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -579,7 +579,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 602700320}
-  m_Mesh: {fileID: 4300000, guid: 5dfdd0ca0f7748d4f8a3ffc88ab17388, type: 2}
+  m_Mesh: {fileID: 4300000, guid: e7e87924400c8d44390817882e4d7e80, type: 2}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -984,9 +984,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _particleSystem: {fileID: 1184048409}
   _groups:
-  - {fileID: 1976974109}
   - {fileID: 1049652958}
+  - {fileID: 1976974109}
+  - {fileID: 207301878}
   _radius: 1
+  isAnimation: 1
 --- !u!4 &1762125858
 Transform:
   m_ObjectHideFlags: 0
@@ -995,7 +997,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1762125856}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1976757400}
@@ -1015,6 +1017,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6002e70ad5912549914fd86752c508e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isMove: 0
+  isRotate: 0
   xSpeed: 1
   ySpeed: 1
   zSpeed: 1
@@ -1045,13 +1049,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1930770161}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.785, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1049652959}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!114 &1930770163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1117,7 +1121,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1930770161}
-  m_Mesh: {fileID: 4300000, guid: 005488ce579d61148a283fe92b0d85e3, type: 2}
+  m_Mesh: {fileID: 4300000, guid: 7f69df478ef6475489947bb3a4d16584, type: 2}
 --- !u!1 &1976757399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,7 +1233,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _baseScale
-      value: 0.02
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _particleMat
@@ -1241,7 +1245,7 @@ PrefabInstance:
       objectReference: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
     - target: {fileID: 4091303684116769022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: _initDataCount
-      value: 1700000
+      value: 500000
       objectReference: {fileID: 0}
     - target: {fileID: 8013832515652379022, guid: a6f575cc2b4cd9e46b21df6a241723e1, type: 3}
       propertyPath: m_RootOrder

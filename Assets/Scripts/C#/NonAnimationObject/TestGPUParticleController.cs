@@ -7,6 +7,8 @@ public class TestGPUParticleController : MonoBehaviour
     [SerializeField] private GPUParticleRootSystem _particleSystem = null;
     [SerializeField] private GPUParticleTargetGroups[] _groups = null;
     [SerializeField] private float _radius = 3f;
+    [SerializeField] bool isAnimation = false;
+    bool isAnimationAction = false;
 
     private GPUParticleTargetGroups CurrentGroup => _groups[_index];
 
@@ -29,7 +31,12 @@ public class TestGPUParticleController : MonoBehaviour
         _particleSystem.SetGroup(_groups[0]);
         _particleSystem.Play();
 
-        //InvokeRepeating("Next", 1, 2);
+        isAnimationAction = false;
+        
+        if (isAnimation)
+        {
+            InvokeRepeating("Animation", 1, 1);
+        }
     }
 
     private void Update()
@@ -39,22 +46,27 @@ public class TestGPUParticleController : MonoBehaviour
         
         if (Input.GetKey(KeyCode.U))
         {
+            isAnimationAction = false;
             UpdatePosition();
         }
         if (Input.GetKeyDown(KeyCode.N))
         {
+            isAnimationAction = false;
             Next();
         }
         if (Input.GetKey(KeyCode.K))
         {
+            isAnimationAction = false;
             KeepPosition();
         }
         if (Input.GetKeyDown(KeyCode.G))
         {
+            isAnimationAction = true;
             Gravity();
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
+            isAnimationAction = false;
             Explosion();
         }
     }
@@ -89,6 +101,16 @@ public class TestGPUParticleController : MonoBehaviour
     {
         _particleSystem.ChangeUpdateMethodWithClear(UpdateMethodType.UpdatePosition);
         _particleSystem.SetGroup(CurrentGroup);
+    }
+    private void Animation()
+    {
+        if (!isAnimationAction)
+        {
+            _index = (_index + 1) % _groups.Length;
+            _particleSystem.ChangeUpdateMethodWithClear(UpdateMethodType.UpdatePosition);
+            _particleSystem.SetGroup(CurrentGroup);
+        }
+        
     }
     private void Explosion()
     {

@@ -14,7 +14,7 @@
             "RenderType" = "Transparent"
             }
         LOD 200
-        //Blend OneMinusDstColor One
+        Blend OneMinusDstColor One
 
         Pass
         {
