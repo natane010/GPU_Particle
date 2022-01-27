@@ -9,6 +9,7 @@ public class GetBakeAnimationMesh : MonoBehaviour
     [SerializeField] GameObject animatorObject;
     private Animator selfAnimator;
     [SerializeField] private  SkinnedMeshRenderer _skin;
+    [SerializeField] bool weld = false;
     static Mesh flameMesh;
     float flameCount = new float();
     [SerializeField] private string name = "skin";
@@ -17,6 +18,9 @@ public class GetBakeAnimationMesh : MonoBehaviour
     public InputField inputField1;
     public Text text;
 
+    [SerializeField] bool isDissect = false;
+    [SerializeField, Range(1, 4)] protected int details = 1;
+    static Vector2[] uvs;
     int flame;
     private void Awake()
     {
@@ -46,6 +50,19 @@ public class GetBakeAnimationMesh : MonoBehaviour
         Debug.Log("Bake");
         var mesh = new Mesh();
         _skin.BakeMesh(mesh);
+        if (isDissect)
+        {
+            mesh = SubdivisionSurface.Subdivide(SubdivisionSurface.Weld(mesh, float.Epsilon, mesh.bounds.size.x), details, weld);
+            int i = 0;
+            uvs = new Vector2[mesh.vertices.Length];
+            foreach (var item in mesh.vertices)
+            {
+                uvs[i] = new Vector2(item.x, item.y);
+                i++;
+            }
+
+            mesh.uv = uvs;
+        }
         AssetDatabase.CreateAsset(mesh, "Assets/prefabs/mekemeshskin_"+ name + "_flame_" + flameCount + "s.mesh");
     }
     public void SetName()

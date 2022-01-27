@@ -1758,10 +1758,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animatorObject: {fileID: 4263071461282204063}
   _skin: {fileID: 4843736532759474512}
+  weld: 1
   name: skin
   inputField: {fileID: 1585889774}
   inputField1: {fileID: 729737762}
   text: {fileID: 1039838719}
+  isDissect: 0
+  details: 1
 --- !u!1 &22877317952653342
 GameObject:
   m_ObjectHideFlags: 0

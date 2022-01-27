@@ -154,6 +154,7 @@ public class GPUParticleRootSystem : MonoBehaviour
     private int _kernelUpdateAsGravity = 0;
     private int _kernelUpdateKeepAsPosition = 0;
     private int _kernelUpdateAsPosition = 0;
+    private int _kernelExControll = 0;
 
     private int _currentUpdateKernel = 0;
 

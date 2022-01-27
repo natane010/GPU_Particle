@@ -35,7 +35,7 @@ public class TestGPUParticleController : MonoBehaviour
         
         if (isAnimation)
         {
-            InvokeRepeating("Animation", 1, 1);
+            InvokeRepeating("Animation", 0.2f, 0.2f);
         }
     }
 
@@ -69,6 +69,7 @@ public class TestGPUParticleController : MonoBehaviour
             isAnimationAction = false;
             Explosion();
         }
+        
     }
     private void Initialize()
     {
