@@ -6,7 +6,7 @@ using UnityEditor;
 
 public class MakeAnimationData : Editor
 {
-    [MenuItem("Assets/prefabs/Object")]
+    [MenuItem("Assets/prefabs/Object", true)]
     static void Create()
     {
         string path = AssetDatabase.GetAssetPath(Selection.activeObject);
