@@ -2411,13 +2411,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _particleSystem: {fileID: 1184048409}
   _groups:
-  - {fileID: 532203920}
-  - {fileID: 2057439447}
-  - {fileID: 603488319}
-  - {fileID: 983408549}
-  - {fileID: 4006583}
+  - {fileID: 1315360322}
+  - {fileID: 1049652958}
   _radius: 20
-  isAnimation: 1
+  isAnimation: 0
 --- !u!4 &1762125858
 Transform:
   m_ObjectHideFlags: 0

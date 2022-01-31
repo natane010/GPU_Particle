@@ -7,7 +7,8 @@ public class AnimationWeponParticleController : MonoBehaviour
 {
     [SerializeField] private GPUParticleRootSystem _particleSystem = null;
     [SerializeField] private GPUParticleTargetGroups[] _groups = null;
-    
+    [SerializeField] private float m_GravityTime;
+    [SerializeField] private bool iskeepposition;
     private GPUParticleTargetGroups CurrentGroup => _groups[_index];
 
     private int _index = 0;
@@ -16,6 +17,9 @@ public class AnimationWeponParticleController : MonoBehaviour
     WeponType WType => TestAnimationPlayer.wt;
     int hash => TestAnimationPlayer.m_animHash;
 
+    bool m_isParticleWorking;
+
+    WeponType CurrentWepon;
 
     private IEnumerator Start()
     {
@@ -36,31 +40,38 @@ public class AnimationWeponParticleController : MonoBehaviour
 
     private void Update()
     {
-        switch (WType)
+        if (WType != CurrentWepon)
         {
-            case WeponType.Sword:
-                _index = 0;
-                break;
-            case WeponType.Spier:
-                _index = 1;
-                break;
-            case WeponType.Hand:
-                _index = 2;
-                break;
-            case WeponType.Leg:
-                break;
+            switch (WType)
+            {
+                case WeponType.Sword:
+                    CurrentWepon = WType;
+                    StartCoroutine(ChangeWepon(0, m_GravityTime));
+                    break;
+                case WeponType.Spier:
+                    CurrentWepon = WType;
+                    StartCoroutine(ChangeWepon(1, m_GravityTime));
+                    break;
+                case WeponType.Hand:
+                    CurrentWepon = WType;
+                    StartCoroutine(ChangeWepon(2, m_GravityTime));
+                    break;
+                case WeponType.Leg:
+                    CurrentWepon = WType;
+                    StartCoroutine(ChangeWepon(3, m_GravityTime));
+                    break;
+            }
         }
-        if (hash == 0)
+        if (!m_isParticleWorking)
         {
-            KeepPosition();
-        }
-        else if (hash == 20)
-        {
-            KeepPosition();
-        }
-        else
-        {
-            UpdatePosition();
+            if (iskeepposition)
+            {
+                KeepPosition();
+            }
+            else
+            {
+                UpdatePosition();
+            }
         }
     }
     private void Initialize()
@@ -122,5 +133,20 @@ public class AnimationWeponParticleController : MonoBehaviour
         _particleSystem.SetOrigin(Vector3.one);
         _particleSystem.UpdateInitData(_initData);
         _particleSystem.ChangeUpdateMethodWithClear(UpdateMethodType.Explode);
+    }
+
+    IEnumerator ChangeWepon(int index, float time)
+    {
+        iskeepposition = false;
+        m_isParticleWorking = true;
+        Gravity();
+        //yield return null;
+        yield return new WaitForSeconds(time/ 2f);
+        _index = index;
+        UpdatePosition();
+        yield return new WaitForSeconds(time);
+        m_isParticleWorking = false;
+        yield return new WaitForSeconds(time);
+        iskeepposition = true;
     }
 }

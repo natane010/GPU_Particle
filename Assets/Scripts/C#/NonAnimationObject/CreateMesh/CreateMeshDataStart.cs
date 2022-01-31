@@ -17,6 +17,7 @@ public class CreateMeshDataStart : MonoBehaviour
     void Start()
     {
         //SubdivisionSurface.count = count;
+        Debug.Log("made mesh");
         var filter = GetComponent<MeshFilter>();
         var source = filter.mesh;
         var mesh = SubdivisionSurface.Subdivide(SubdivisionSurface.Weld(source, float.Epsilon, source.bounds.size.x), details, weld);
@@ -32,5 +33,6 @@ public class CreateMeshDataStart : MonoBehaviour
         filter.sharedMesh = mesh;
         filter.mesh = mesh;
         AssetDatabase.CreateAsset(mesh, "Assets/prefabs/mekemesh" + count + ".mesh");
+        Debug.Log("Complete");
     }
 }

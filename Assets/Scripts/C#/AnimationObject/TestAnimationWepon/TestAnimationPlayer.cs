@@ -66,9 +66,6 @@ public class TestAnimationPlayer : MonoBehaviour
         CheakInput();
         CheakState();
         //Debug.Log(m_animHash);
-    }
-    private void LateUpdate()
-    {
         m_animHash = m_currentHash;
         m_selfAnimator.SetInteger("State", m_animHash);
     }
