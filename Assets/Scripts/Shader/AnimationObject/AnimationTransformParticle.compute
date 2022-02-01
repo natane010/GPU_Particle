@@ -1,6 +1,12 @@
+//#pragma kernel SetupParticles
+//#pragma kernel SetupParticlesImmediately
+//#pragma kernel Disable
 
-
-#pragma kernel RecalcPosition
+//#pragma kernel UpdateAsTarget
+//#pragma kernel UpdateAsExplosion
+//#pragma kernel UpdateAsGravity
+//#pragma kernel UpdateKeepAsPosition
+//#pragma kernel UpdateAsTargetPosition
 
 #define THREAD_NUM 64
 
@@ -8,7 +14,7 @@
 
 #include "../NonAnimationObject/NoiseMath.cginc"
 
-struct AnimationTransformParticle
+struct TransformParticle
 {
     int isActive;
     int targetId;
@@ -27,7 +33,7 @@ struct AnimationTransformParticle
     float3 horizontal;
 };
 
-struct AnimationInitData
+struct InitData
 {
     int isActive;
     float3 targetPosition;
@@ -41,19 +47,15 @@ struct AnimationInitData
     float3 horizontal;
 };
 
-RWStructuredBuffer<AnimationTransformParticle> _Particles;
+RWStructuredBuffer<TransformParticle> _Particles;
 StructuredBuffer<InitData> _InitDataList;
 StructuredBuffer<float4x4> _MatrixData;
 StructuredBuffer<uint> _IndexBuffer;
-
-RWTexture2D<float4> CurrPositionBuffer;
-RWTexture2D<float4> CurrNormalBuffer;
 
 float _DeltaTime;
 float _Time;
 float _Gravity;
 float3 _Origin;
-
 
 [numthreads(THREAD_NUM, 1, 1)]
 void SetupParticles(uint id : SV_DispatchThreadID)
@@ -76,7 +78,7 @@ void SetupParticles(uint id : SV_DispatchThreadID)
 }
 
 [numthreads(THREAD_NUM, 1, 1)]
-void AnimationSetupParticlesImmediately(uint id : SV_DispatchThreadID)
+void SetupParticlesImmediately(uint id : SV_DispatchThreadID)
 {
     TransformParticle p = _Particles[id];
 
@@ -97,9 +99,95 @@ void AnimationSetupParticlesImmediately(uint id : SV_DispatchThreadID)
 }
 
 [numthreads(THREAD_NUM, 1, 1)]
-void AnimationDisable(uint id : SV_DispatchThreadID)
+void Disable(uint id : SV_DispatchThreadID)
 {
     TransformParticle p = _Particles[id];
     p.isActive = 0;
     _Particles[id] = p;
 }
+
+
+[numthreads(THREAD_NUM, 1, 1)]
+void UpdateKeepAsPosition(uint id : SV_DispatchThreadID)
+{
+    TransformParticle p = _Particles[id];
+    p.velocity = 0;
+    p.position = p.targetPosition;
+    p.useTexture = 1;
+    _Particles[id] = p;
+}
+[numthreads(THREAD_NUM, 1, 1)]
+void UpdateAsTarget(uint id : SV_DispatchThreadID)
+{
+    TransformParticle p = _Particles[id];
+
+    float3 delta = p.targetPosition - p.position;
+    float3 pos = (delta + p.velocity.xyz * 0.2) * _DeltaTime * p.speed;
+
+    const float k = 5.5;
+    p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
+
+    p.position += pos;
+    p.useTexture = 1;
+
+    _Particles[id] = p;
+}
+[numthreads(THREAD_NUM, 1, 1)]
+void UpdateAsTargetPosition(uint id : SV_DispatchThreadID)
+{
+    TransformParticle p = _Particles[id];
+
+    float3 delta = p.targetPosition - p.position;
+    float3 pos = delta * _DeltaTime * p.speed;
+
+    const float k = 5.5;
+    p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
+
+    p.position += pos;
+    p.useTexture = 1;
+
+    _Particles[id] = p;
+}
+
+[numthreads(THREAD_NUM, 1, 1)]
+void UpdateAsExplosion(uint id : SV_DispatchThreadID)
+{
+    TransformParticle p = _Particles[id];
+
+    float3 pos = (p.velocity.xyz) * p.velocity.w * _DeltaTime;
+
+    float s = sin(rand(id) + _Time) * 0.00003;
+    p.velocity.xyz += s;
+    float k = 2.0;
+    p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
+
+    p.position += pos;
+
+    p.useTexture = 0;
+
+    _Particles[id] = p;
+}
+
+[numthreads(THREAD_NUM, 1, 1)]
+void UpdateAsGravity(uint id : SV_DispatchThreadID)
+{
+    TransformParticle p = _Particles[id];
+
+    float power = p.velocity.w;
+
+    float3 d = p.position - _Origin;
+    float3 up = normalize(d);
+    float3 forward = normalize(cross(up, p.horizontal) + 0.00001);
+
+    p.velocity.xyz += (forward * power) * _DeltaTime * p.isActive;
+
+    p.velocity.xyz += up * _Gravity * _DeltaTime;
+
+    const float k = 2.5;
+    p.velocity.xyz -= k * p.velocity.xyz * _DeltaTime;
+
+    p.position += p.velocity.xyz * _DeltaTime;
+
+    _Particles[id] = p;
+}
+

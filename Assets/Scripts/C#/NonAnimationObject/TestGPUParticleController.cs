@@ -10,6 +10,8 @@ public class TestGPUParticleController : MonoBehaviour
     [SerializeField] bool isAnimation = false;
     bool isAnimationAction = false;
 
+    
+
     private GPUParticleTargetGroups CurrentGroup => _groups[_index];
 
     private int _index = 0;
@@ -69,7 +71,11 @@ public class TestGPUParticleController : MonoBehaviour
             isAnimationAction = false;
             Explosion();
         }
-        
+        if (Input.GetKey(KeyCode.A))
+        {
+            isAnimationAction = false;
+            UpdatePosition();
+        }
     }
     private void Initialize()
     {
@@ -140,6 +146,11 @@ public class TestGPUParticleController : MonoBehaviour
         _particleSystem.SetOrigin(Vector3.one);
         _particleSystem.UpdateInitData(_initData);
         _particleSystem.ChangeUpdateMethodWithClear(UpdateMethodType.Explode);
+    }
+    private void AnimationSkinnedMesh()
+    {
+        _particleSystem.ChangeUpdateMethodWithClear(UpdateMethodType.UpdateAnimation);
+
     }
 }
 

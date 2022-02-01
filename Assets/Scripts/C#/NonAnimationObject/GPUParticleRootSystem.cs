@@ -20,6 +20,7 @@ public enum UpdateMethodType
     Gravity,
     KeepPosition,
     UpdatePosition,
+    UpdateAnimation,
 }
 
 public interface GPUParticleTarget
@@ -125,6 +126,7 @@ public class GPUParticleRootSystem : MonoBehaviour
 
     private readonly int THREAD_NUM = 64;
 
+    
     public int ParticleCount => _count;
 
     private ComputeBuffer _particleBuffer = null;
@@ -154,7 +156,8 @@ public class GPUParticleRootSystem : MonoBehaviour
     private int _kernelUpdateAsGravity = 0;
     private int _kernelUpdateKeepAsPosition = 0;
     private int _kernelUpdateAsPosition = 0;
-    private int _kernelExControll = 0;
+    
+    
 
     private int _currentUpdateKernel = 0;
 
@@ -173,7 +176,7 @@ public class GPUParticleRootSystem : MonoBehaviour
         {
             DrawParticles();
         }
-        //Initialize();
+        
     }
 
     private void OnDestroy()
@@ -270,6 +273,7 @@ public class GPUParticleRootSystem : MonoBehaviour
             case UpdateMethodType.UpdatePosition:
                 _currentUpdateKernel = _kernelUpdateAsPosition;
                 break;
+           
         }
     }
 
@@ -423,6 +427,7 @@ public class GPUParticleRootSystem : MonoBehaviour
         _kernelUpdateAsGravity = _computeShader.FindKernel("UpdateAsGravity");
         _kernelUpdateKeepAsPosition = _computeShader.FindKernel("UpdateKeepAsPosition");
         _kernelUpdateAsPosition = _computeShader.FindKernel("UpdateAsTargetPosition");
+        
 
         _currentUpdateKernel = _kernelUpdateAsTarget;
 

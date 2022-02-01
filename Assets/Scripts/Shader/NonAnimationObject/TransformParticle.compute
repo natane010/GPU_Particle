@@ -8,6 +8,7 @@
 #pragma kernel UpdateKeepAsPosition
 #pragma kernel UpdateAsTargetPosition
 
+
 #define THREAD_NUM 64
 
 #define PI 3.1415926535
@@ -190,4 +191,3 @@ void UpdateAsGravity(uint id : SV_DispatchThreadID)
 
     _Particles[id] = p;
 }
-
