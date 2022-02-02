@@ -341,7 +341,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 006382d2b8fede34c889a9ba94c0d4c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxParticles: 1000
+  _maxParticles: 100000
   _emitterCenter: {x: 0, y: 0, z: 0}
   _emitterSize: {x: 1, y: 1, z: 1}
   _throttle: 1
