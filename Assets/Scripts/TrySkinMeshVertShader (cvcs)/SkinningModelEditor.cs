@@ -59,3 +59,21 @@ public class SkinningModelEditor : Editor
     }
     #endregion
 }
+[CanEditMultipleObjects]
+[CustomEditor(typeof(SkinningSorce))]
+public class SkinningSourceEditor : Editor
+{
+    SerializedProperty model;
+    private void OnEnable()
+    {
+        model = serializedObject.FindProperty("model");
+    }
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+        EditorGUILayout.PropertyField(model);
+        serializedObject.ApplyModifiedProperties();
+    }
+}
+//[CustomEditor(typeof())]
+//public class StandartSkinnerParticleEdtor : Editor
