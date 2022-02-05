@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(SkinnedMeshRenderer))]
 public class SkinningSorce : MonoBehaviour
 {
-    [SerializeField] SkiningSorceModel m_model;
+    [SerializeField] SkinningSorceModel m_model;
 
     #region value
     //頂点ベイクするための代替シェーダー
