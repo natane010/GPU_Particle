@@ -215,7 +215,7 @@ public class SkinningStandartPartcleController : MonoBehaviour
         Velocity, 
         Rotation, 
     }
-    AnimationKernelSet<Kernels, Buffers> m_kernel;
+    //AnimationKernelSet<Kernels, Buffers> m_kernel;
 
     #endregion
 }

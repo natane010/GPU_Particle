@@ -19,7 +19,7 @@ public class AnimationVertexPositionCalc : MonoBehaviour
     int m_flameCount;
 
     //skinnerからとってきた機能モデルが使えるように処理してくれるクラス
-    [SerializeField] SkinnerModel m_processedModel;
+    [SerializeField] SkinningSorceModel m_processedModel;
 
     RenderTexture tanBuffer;
     RenderTexture currentPositionBuffer0;
@@ -54,10 +54,11 @@ public class AnimationVertexPositionCalc : MonoBehaviour
     RenderTexture CreateBuffer()
     {
         //デバイスの確認　skinnerからとってきた。
-        RenderTextureFormat format = SkinnerInternals.supportedBufferFormat;
-        RenderTexture renderTexture = new RenderTexture(m_processedModel.vertexCount, 1, 0, format);
-        renderTexture.filterMode = FilterMode.Point;
-        return renderTexture;
+        //RenderTextureFormat format = SkinnerInternals.supportedBufferFormat;
+        //RenderTexture renderTexture = new RenderTexture(m_processedModel.vertexCount, 1, 0, format);
+        //renderTexture.filterMode = FilterMode.Point;
+        //return renderTexture;
+        return null;
     }
 
     //-------------------------------------------------------------
