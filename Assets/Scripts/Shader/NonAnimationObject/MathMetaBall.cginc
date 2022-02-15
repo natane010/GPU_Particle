@@ -1,20 +1,19 @@
-#ifndef __MATHMETABALL_CGINC__
+ï»¿#ifndef __MATHMETABALL_CGINC__
 #define __MATHMETABALL_CGINC__
 
-//•âŠ®‚Ì‚½‚ß‚ÌŠÖ”
+//è£œå®Œã®ãŸã‚ã®é–¢æ•°
 float SmoothMin(float d1,float d2,float k)
 {
 	return -log(exp(-k*d1)+exp(-k*d2))/k;
 }
-//‹——£ŠÖ”
+//è·é›¢é–¢æ•°
 float ball(float3 p,float s)
 {
 	return length(p)-s;
 }
-//‹…‚Ì‹——£ŠÖ”ª‚æ‚è³Šm
+//çƒã®è·é›¢é–¢æ•°â†‘ã‚ˆã‚Šæ­£ç¢º
 float4 sphereDistanceFunction(float4 sphere, float3 pos)
 {
     return length(sphere.xyz - pos) - sphere.w;
 }
-
 #endif

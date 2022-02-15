@@ -98,6 +98,7 @@ public class GPUParticleRootSystem : MonoBehaviour
         public int IndexBufferID;
         public int OriginID;
         public int GravityID;
+        public int CountPID;
 
         public PropertyDef()
         {
@@ -112,6 +113,7 @@ public class GPUParticleRootSystem : MonoBehaviour
             IndexBufferID = Shader.PropertyToID("_IndexBuffer");
             OriginID = Shader.PropertyToID("_Origin");
             GravityID = Shader.PropertyToID("_Gravity");
+            CountPID = Shader.PropertyToID("_CountParticle");
         }
     }
 
@@ -438,6 +440,7 @@ public class GPUParticleRootSystem : MonoBehaviour
         SetFloat(_propertyDef.GravityID, _gravity);
 
         _particleMat.SetBuffer(_propertyDef.ParticleBufferID, _particleBuffer);
+        _particleMat.SetInt(_propertyDef.CountPID, _count);
     }
 
     private void CreateBuffers()
