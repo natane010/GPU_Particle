@@ -448,7 +448,7 @@ public class GPUParticleRootSystem : MonoBehaviour
         
         _maxCount = (_count / THREAD_NUM) * THREAD_NUM;
 
-        Debug.Log($"Will create {_maxCount} particles.");
+        Debug.Log($" creating {_maxCount} particles.");
 
         _particleData = new TransformParticle[_maxCount];
         for (int i = 0; i < _particleData.Length; i++)

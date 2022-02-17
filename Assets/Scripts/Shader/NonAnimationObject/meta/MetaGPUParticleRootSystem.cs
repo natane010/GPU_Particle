@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 public struct TransformMetaBallParticle
@@ -37,6 +38,7 @@ public struct InitializeMetaData
 public class MetaGPUParticleRootSystem : MonoBehaviour
 {
 #nullable enable
+    #region consolidate
     private class PropertyMetaDef
     {
         public int ParticleBufferID;
@@ -68,6 +70,8 @@ public class MetaGPUParticleRootSystem : MonoBehaviour
             CountPID = Shader.PropertyToID("_CountParticle");
         }
     }
+    #endregion
+    #region Variable
     [SerializeField] private int _metaCount = 10000;
     [SerializeField] private int _initMetaDataCount = 500000;
     [SerializeField] private ComputeShader _computeMetaShader = null;
@@ -86,8 +90,93 @@ public class MetaGPUParticleRootSystem : MonoBehaviour
     private ComputeBuffer _metaArgsBuffer = null; //引数バッファ
     private ComputeBuffer _metaIndexBuffer = null;
 
-    private uint[] _argsData = new uint[] { 0, 0, 0, 0, 0 };
+    private uint[] _metaArgsData = new uint[] { 0, 0, 0, 0, 0 };
     private uint[] _indices = null;
+    private uint[] _metaDefaultIndices = null;
+    private Matrix4x4[] _metaMatrixData = new Matrix4x4[30];
+    private TransformMetaBallParticle[] _metaParticleData = null;
+    private InitializeMetaData[] _initializeMetaData = null;
 
+    private PropertyMetaDef _propertyMetaDef = null;
+    #endregion
+    #region kernels
+    private int? _maxCount = null;
+
+    private int? _kernelSetupParticlesImmediately = null;
+    private int? _kernelSetupParticles = null;
+    private int? _kernelDisable = null;
+
+    private int? _kernelUpdateAsTarget = null;
+    private int? _kernelUpdateAsExplosion = null;
+    private int? _kernelUpdateAsGravity = null;
+    private int? _kernelUpdateKeepAsPosition = null;
+    private int? _kernelUpdateAsPosition = null;
+
+    private int? _currentUpdateKernel = null;
+    private bool _isRunning = false;
+    #endregion
+    #region initialize
+    void Initialize()
+    {
+        _propertyMetaDef = new PropertyMetaDef();
+        //get kernel id
+        _kernelSetupParticles = _computeMetaShader.FindKernel("SetupParticle");
+        _kernelSetupParticlesImmediately = _computeMetaShader.FindKernel("SetupParticlesImmediately");
+        _kernelDisable = _computeMetaShader.FindKernel("Disable");
+
+        _kernelUpdateAsTarget = _computeMetaShader.FindKernel("UpdateAsTarget");
+        _kernelUpdateAsExplosion = _computeMetaShader.FindKernel("UpdateAsExplosion");
+        _kernelUpdateAsGravity = _computeMetaShader.FindKernel("UpdateAsGravity");
+        _kernelUpdateKeepAsPosition = _computeMetaShader.FindKernel("UpdateKeepAsPosition");
+        _kernelUpdateAsPosition = _computeMetaShader.FindKernel("UpdateAsTargetPosition");
+
+        _currentUpdateKernel = _kernelUpdateAsTarget;
+
+        
+    }
+    void CriateBuffers()
+    {
+        _maxCount = (_metaCount / THREAD_NUM) * THREAD_NUM;
+        Debug.Log($"creating {_maxCount} particles");
+        
+        _metaParticleData =  new TransformMetaBallParticle[(int)_maxCount];
+        for (int i = 0; i < _metaParticleData.Length; i++)
+        {
+            _metaParticleData[i] = new TransformMetaBallParticle
+            {
+                speed = Random.Range(1f, 10f),
+                position = Vector3.zero,
+                targetPosition = Vector3.zero,
+                scale = 1f,
+            };
+        }
+        Debug.Log($"complete set {_metaParticleData.Length} particle datas");
+        _initializeMetaData = new InitializeMetaData[_initMetaDataCount];
+        for (int i = 0; i < _initializeMetaData.Length; i++)
+        {
+            _initializeMetaData[i].targetPosition = Vector3.zero;
+        }
+        Debug.Log($"complete set {_initializeMetaData.Length} particle initializedatas");
+        _indices = new uint[(int)_maxCount];
+
+        _metaDefaultIndices = new uint[(int)_maxCount];
+        for (int i = 0; i < _metaDefaultIndices.Length; i++)
+        {
+            _metaDefaultIndices[i] = (uint)i;
+        }
+        for (int i = 0; i < _metaMatrixData.Length; i++)
+        {
+            _metaMatrixData[i] = Matrix4x4.identity;
+        }
+        Debug.Log($"complete set {_metaMatrixData.Length} Martrix datas");
+        _metaArgsBuffer = new ComputeBuffer(1, Marshal.SizeOf(typeof(uint)) * _metaArgsData.Length, ComputeBufferType.IndirectArguments);
+        _metaParticleBuffer = new ComputeBuffer((int)_maxCount, Marshal.SizeOf(typeof(TransformMetaBallParticle)));
+        _metaParticleBuffer.SetData(_metaParticleData);
+        _metaInitDataListBuffer = new ComputeBuffer(_initializeMetaData.Length, Marshal.SizeOf(typeof(InitializeMetaData)));
+        _metaMatrixBuffer = new ComputeBuffer(_metaMatrixData.Length, Marshal.SizeOf(typeof(Matrix4x4)));
+        _metaIndexBuffer = new ComputeBuffer(_indices.Length, Marshal.SizeOf(typeof(uint)));
+
+    }
+    #endregion
 }
 #nullable disable
