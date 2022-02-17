@@ -96,7 +96,7 @@
 
 
 			//enhanced sphere tracing  http://erleuchtet.org/~cupe/permanent/enhanced_sphere_tracing.pdf
-
+			
 			float raymarch (float3 ro,float3 rd)
 			{
 				float previousradius = 0.0;
