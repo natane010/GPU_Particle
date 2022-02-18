@@ -14,8 +14,8 @@
             "RenderType" = "Transparent"
             }
         LOD 200
-        Blend OneMinusDstColor One
-
+        //Blend OneMinusDstColor One
+        Blend SrcAlpha OneMinusSrcAlpha
         Pass
         {
         CGPROGRAM
