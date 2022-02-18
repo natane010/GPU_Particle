@@ -16,8 +16,8 @@ Shader "Custom/TransformMetaParticle"
             //"RenderType" = "Transparent"
         }
         LOD 200
-        //Blend OneMinusDstColor One
-        Blend SrcAlpha OneMinusSrcAlpha
+        Blend OneMinusDstColor One
+        //Blend SrcAlpha OneMinusSrcAlpha
         Pass
         {
         CGPROGRAM
