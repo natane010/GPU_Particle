@@ -120,6 +120,7 @@
                 float diff = clamp(dot(i.normal, normalize(float3(0.1, -1.0, 0))), 0.05, 0.8);
                 col = diff.xxxx;
             }
+            col.a = 0.8;
             return col;
         }
         ENDCG

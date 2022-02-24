@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(MeshFilter))]
 public class CreateMeshDataStart : MonoBehaviour
 {
     [SerializeField, Range(1, 4)] protected int details = 1;
